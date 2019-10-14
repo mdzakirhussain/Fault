@@ -191,7 +191,7 @@ class Simulator {
                 // }
                 for i in 0..<inputs.count {
                     testVector.append(   
-                      randomGenerator[i].next(outputBits: UInt(inputs[i].width))
+                      randomGenerator[0].next(outputBits: UInt(inputs[i].width))
                     )
                 }
                 if testVectorHash.contains(testVector) {

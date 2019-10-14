@@ -166,7 +166,6 @@ class Simulator {
         var totalTVAttempts = 0
         var tvAttempts = initialVectorCount
         
-        let rng: URNG = RandGenFactory.shared().getRandGen(type:randomGenerator, num: UInt(inputs.count))
         
         while coverage < minimumCoverage && totalTVAttempts < ceiling {
             if totalTVAttempts > 0 {
@@ -176,6 +175,7 @@ class Simulator {
             var futureList: [Future<Coverage>] = []
             var testVectors: [TestVector] = []
             
+            let rng: URNG = RandGenFactory.shared().getRandGen(type:randomGenerator, num: UInt(inputs.count))
 
             for _ in 0..<tvAttempts {
                 var testVector: TestVector = []

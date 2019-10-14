@@ -166,8 +166,8 @@ class Simulator {
         var totalTVAttempts = 0
         var tvAttempts = initialVectorCount
         
-        let rng: URNG = RandGenFactory.shared().getRandGen(type:randomGenerator  ) // LFSR(nbits: 64)
-
+        let rng: URNG = RandGenFactory.shared().getRandGen(type:randomGenerator, num: UInt(inputs.count))
+        
         while coverage < minimumCoverage && totalTVAttempts < ceiling {
             if totalTVAttempts > 0 {
                 print("Minimum coverage not met (\(coverage * 100)%/\(minimumCoverage * 100)%,) incrementing to \(totalTVAttempts + tvAttempts)…")

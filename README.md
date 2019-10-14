@@ -117,3 +117,6 @@ Then simply invoke `swift install.swift`. This will install it to `~/bin` by def
 
 ## Usage without installing
 A special consideration is osu035 will not be used automatically. 
+
+## Benchmarks
+The benchmarks results are available at [Benchmarks](Benchmarks.md) . 

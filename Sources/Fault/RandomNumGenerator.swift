@@ -56,17 +56,21 @@ class LFSR: URNG {
         64: [64, 63, 61, 60]  
     ];
 
-    var seed: UInt
+    var seed: [UInt]
     var polynomialHex: UInt
     let nbits: UInt 
     
-    init (nbits: UInt){     
+    init (nbits: UInt, num: UInt){     
         let max: UInt = (nbits == 64) ? UInt(pow(Double(2),Double(63))-1) : (1 << nbits) - 1  
         let polynomial =  LFSR.taps[nbits]!
 
-        self.seed = UInt.random(in: 1...max)
         self.nbits = nbits
         self.polynomialHex = 0
+        self.seed = []
+
+        for _ in 0...num{
+            self.seed.append(UInt.random(in: 1...max))
+        }
 
         for tap in polynomial {
              self.polynomialHex = self.polynomialHex | (1 << (nbits-tap));
@@ -84,9 +88,13 @@ class LFSR: URNG {
     }
 
     func rand() -> UInt {
-        let feedbackBit: UInt = LFSR.parity(number: self.seed & self.polynomialHex)
-        self.seed = (self.seed >> 1) | (feedbackBit << (self.nbits - 1))
-        return self.seed
+        struct Holder {
+          static var timesCalled = 0
+        }
+        Holder.timesCalled = (Holder.timesCalled +  1) % (self.seed.count)
+        let feedbackBit: UInt = LFSR.parity(number: self.seed[Holder.timesCalled] & self.polynomialHex)
+        self.seed[Holder.timesCalled] = (self.seed[Holder.timesCalled] >> 1) | (feedbackBit << (self.nbits - 1))
+        return self.seed[Holder.timesCalled]
     }
 
     func generate(_ range: Range<UInt>) -> UInt {
@@ -105,12 +113,13 @@ class RandGenFactory{
         return sharedRandFactory
     }
 
-    func getRandGen(type: RandomGenerator)->URNG{
+    func getRandGen(type: RandomGenerator, num: UInt)->URNG{
+        print(num)
         switch type {
             case .swift:
                 return SwiftRNG()
             case .LFSR:
-                return LFSR(nbits: 64)
+                return LFSR(nbits: 32, num: num)
         }
     }
 }
